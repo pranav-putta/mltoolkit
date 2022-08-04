@@ -308,6 +308,20 @@ class NestedArgumentParser(ArgumentParser):
         return obj
 
 
+def parse_config(config_file):
+    assert os.path.exists(config_file), f'could not find config file: {config_file}'
+
+    if '.yaml' in config_file:
+        with open(config_file) as f:
+            arg_dict = (yaml.safe_load(f))
+    elif '.json' in config_file:
+        with open(config_file) as f:
+            arg_dict = json.load(f)
+    else:
+        assert False, f'{config_file} file type is not supported yet!'
+    return arg_dict
+
+
 def parse_args(arg_class, required_args=None, print_args=True, resolve_config=True):
     """
     behavior as follows: first reads config file arguments. then overrides any arguments with
@@ -340,16 +354,7 @@ def parse_args(arg_class, required_args=None, print_args=True, resolve_config=Tr
     if 'config' in cli_arg_dict.keys() and cli_arg_dict['config'] and resolve_config:
         cli_arg_dict['config'] = resolve_config_file(cli_arg_dict['config'])
         config_file = cli_arg_dict['config']
-        assert os.path.exists(config_file), f'could not find config file: {config_file}'
-
-        if '.yaml' in config_file:
-            with open(config_file) as f:
-                arg_dict = (yaml.safe_load(f))
-        elif '.json' in config_file:
-            with open(config_file) as f:
-                arg_dict = json.load(f)
-        else:
-            assert False, f'{config_file} file type is not supported yet!'
+        arg_dict = parse_config(config_file)
 
     # override config file args with command line args
     _flatten_args(arg_dict)
