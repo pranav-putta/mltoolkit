@@ -1,7 +1,7 @@
 # mltoolkit
 set of universal tools for personal machine learning projects
 
-## Argparse -- powerful argument generation
+## Argparse -- rapid argument generation
 ### Initialization
 Simply create a class with a set of fields. Wrap the class with the @argclass annotation and that's it!
 
