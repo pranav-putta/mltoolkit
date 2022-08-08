@@ -270,7 +270,7 @@ class NestedArgumentParser(ArgumentParser):
         if len(remaining_args) > 0:
             pprint("Didn't recognize the following arguments:")
             pprint(remaining_args)
-            exit(1)
+            # exit(1)
         default_args = asdict(self.dataclass_type())
         _flatten_args(default_args)
         inputs = {k: v for k, v in vars(namespace).items()}
