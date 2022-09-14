@@ -1,6 +1,11 @@
 # mltoolkit
 set of universal tools for personal machine learning projects
 
+## Install
+```bash
+pip install git+git://github.com/pranav-putta/mltoolkit@master
+```
+
 ## Argparse -- rapid argument generation
 ### Initialization
 Simply create a class with a set of fields. Wrap the class with the @argclass annotation and that's it!
