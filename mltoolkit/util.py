@@ -1,6 +1,6 @@
 import os
 
-from arguments import DataUseArguments, WandBArguments
+from mltoolkit.arguments import DataUseArguments, WandBArguments
 
 
 def download_dataset(dataset_args: DataUseArguments, wandb_args: WandBArguments):

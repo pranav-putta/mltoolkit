@@ -2,7 +2,7 @@ import os
 from dataclasses import field
 from typing import Optional, Any
 
-from argparser import argclass
+from mltoolkit.argparser import argclass
 import torch
 
 
