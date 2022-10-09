@@ -3,7 +3,7 @@ set of universal tools for personal machine learning projects
 
 ## Install
 ```bash
-pip install git+git://github.com/pranav-putta/mltoolkit@master
+pip install git+https://github.com/pranav-putta/mltoolkit.git
 ```
 
 ## Argparse -- rapid argument generation
