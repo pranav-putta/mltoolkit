@@ -5,6 +5,7 @@ import dataclasses
 import json
 import os
 import sys
+import typing
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, ArgumentTypeError
 from copy import copy
 from dataclasses import asdict
@@ -103,17 +104,16 @@ def argclass(*args, **kwargs):
                 if _is_argclass(field_type) and type(field_value) is dict:
                     setattr(self, name, field_type(**field_value))
                 # handle cases where field type is a dict
-                if type(field_value) is dict and field_type._name == 'Dict' and _is_argclass(field_type.__args__[1]):
+                if type(field_type) == typing._GenericAlias and field_type._name == 'Dict' and _is_argclass(
+                        field_type.__args__[1]):
                     field_argclass = field_type.__args__[1]
                     for key, value in field_value.items():
                         field_value[key] = field_argclass(**value)
-                elif type(field_value) is list and field_type._name == 'List' and _is_argclass(field_type.__args__[0]):
+                elif type(field_type) == typing._GenericAlias and field_type._name == 'List' and _is_argclass(
+                        field_type.__args__[0]):
                     field_argclass = field_type.__args__[0]
                     for i in range(len(field_value)):
                         field_value[i] = field_argclass(**field_value[i])
-
-
-
 
             if original_post_init is not None and callable(original_post_init):
                 original_post_init(self)
