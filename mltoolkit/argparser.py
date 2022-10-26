@@ -95,6 +95,9 @@ def argclass(*args, **kwargs):
             if _is_argclass(field_type) and getattr(cls, name, None) is None:
                 setattr(cls, name, field_type())
 
+        if not hasattr(cls, 'config'):
+            setattr(cls, 'config', None)
+
         # decode dictionaries into argument classes through post init
         original_post_init = getattr(cls, '__post_init__', None)
 
