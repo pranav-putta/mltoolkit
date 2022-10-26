@@ -160,6 +160,10 @@ class NestedArgumentParser(ArgumentParser):
             self.required_args = []
 
         self._add_dataclass_arguments(self.dataclass_type)
+        if not hasattr(dataclass_type, 'config'):
+            self.add_argument(
+                "-c", "--conf", dest="_config", action="store", help="config file"
+            )
 
     def _parse_dataclass_field(self, parser: ArgumentParser, field: dataclasses.Field, parent=None):
         # fold parent name into field for nested arguments
@@ -295,6 +299,9 @@ class NestedArgumentParser(ArgumentParser):
         entered_args = [arg for arg in entered_args if arg in default_args.keys()]
         _unflatten_args(inputs)
         obj = self.dataclass_type(**inputs)
+
+        if not hasattr(self.dataclass_type, 'config'):
+            obj['config'] = namespace.config
 
         if return_entered_args:
             return obj, entered_args
