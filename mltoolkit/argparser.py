@@ -96,7 +96,8 @@ def argclass(*args, **kwargs):
                 setattr(cls, name, field_type())
 
         if not hasattr(cls, 'config'):
-            setattr(cls, 'config', None)
+            setattr(cls, 'config', dataclasses.field(default=None))
+            cls.__annotations__['config'] = str
 
         # decode dictionaries into argument classes through post init
         original_post_init = getattr(cls, '__post_init__', None)
