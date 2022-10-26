@@ -17,7 +17,7 @@ class B(GeneralArguments):
 
 
 def main():
-    args = parse_args(A)
+    args = parse_args(B)
     print()
 
 

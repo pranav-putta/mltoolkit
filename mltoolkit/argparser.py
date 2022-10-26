@@ -155,11 +155,12 @@ class NestedArgumentParser(ArgumentParser):
         if self.required_args is None:
             self.required_args = []
 
-        self._add_dataclass_arguments(self.dataclass_type)
         if not hasattr(dataclass_type, 'config'):
             self.add_argument(
-                "-c", "--conf", dest="_config", action="store", help="config file"
+                "-c", "--config", dest="config", action="store", help="config file", required=True
             )
+
+        self._add_dataclass_arguments(self.dataclass_type)
 
     def _parse_dataclass_field(self, parser: ArgumentParser, field: dataclasses.Field, parent=None):
         # fold parent name into field for nested arguments
@@ -292,17 +293,14 @@ class NestedArgumentParser(ArgumentParser):
         _flatten_args(default_args)
         inputs = {k: v for k, v in vars(namespace).items()}
         entered_args = [arg.replace('--', '').split('=')[0] for arg in sys.argv]
-        entered_args = [arg for arg in entered_args if arg in default_args.keys()]
+        entered_args = [arg for arg in entered_args if arg in default_args.keys() or arg == 'config']
         _unflatten_args(inputs)
-        obj = self.dataclass_type(**inputs)
 
-        if not hasattr(self.dataclass_type, 'config'):
-            obj['config'] = namespace.config
 
         if return_entered_args:
-            return obj, entered_args
+            return inputs, entered_args
         else:
-            return obj
+            return inputs
 
     def parse_json_file(self, json_file: str) -> DataClass:
         """
@@ -363,8 +361,7 @@ def parse_args(arg_class, required_args=None, print_args=True, resolve_config=Tr
         return config
 
     parser = NestedArgumentParser(arg_class, required_args=required_args)
-    cli_args, entered_args = parser.parse_args(return_entered_args=True)
-    cli_arg_dict = asdict(cli_args)
+    cli_arg_dict, entered_args = parser.parse_args(return_entered_args=True)
     _flatten_args(cli_arg_dict)
     cli_arg_dict = {arg: cli_arg_dict[arg] for arg in entered_args}
 
@@ -375,6 +372,9 @@ def parse_args(arg_class, required_args=None, print_args=True, resolve_config=Tr
         cli_arg_dict['config'] = resolve_config_file(cli_arg_dict['config'])
         config_file = cli_arg_dict['config']
         arg_dict = parse_config(config_file)
+
+        if not hasattr(arg_class, 'config'):
+            del cli_arg_dict['config']
 
     # override config file args with command line args
     _flatten_args(arg_dict)
