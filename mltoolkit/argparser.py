@@ -112,8 +112,9 @@ def argclass(*args, **kwargs):
                 elif type(field_type) == typing._GenericAlias and field_type._name == 'List' and _is_argclass(
                         field_type.__args__[0]):
                     field_argclass = field_type.__args__[0]
-                    for i in range(len(field_value)):
-                        field_value[i] = field_argclass(**field_value[i])
+                    if field_value is not None:
+                        for i in range(len(field_value)):
+                            field_value[i] = field_argclass(**field_value[i])
 
             if original_post_init is not None and callable(original_post_init):
                 original_post_init(self)
