@@ -157,7 +157,7 @@ class NestedArgumentParser(ArgumentParser):
 
         if not hasattr(dataclass_type, 'config'):
             self.add_argument(
-                "-c", "--config", dest="config", action="store", help="config file", required=True
+                "-c", "--config", dest="config", action="store", help="config file", required=False
             )
 
         self._add_dataclass_arguments(self.dataclass_type)
@@ -295,7 +295,6 @@ class NestedArgumentParser(ArgumentParser):
         entered_args = [arg.replace('--', '').split('=')[0] for arg in sys.argv]
         entered_args = [arg for arg in entered_args if arg in default_args.keys() or arg == 'config']
         _unflatten_args(inputs)
-
 
         if return_entered_args:
             return inputs, entered_args
