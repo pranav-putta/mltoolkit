@@ -1,6 +1,6 @@
 import os
 from dataclasses import field
-from typing import Optional, Any
+from typing import Optional, Any, Sequence
 
 from mltoolkit.argparser import argclass
 import torch
@@ -9,7 +9,7 @@ import torch
 @argclass
 class GeneralArguments:
     no_gpu: bool = field(default=False, metadata={'help': 'do not use GPU acceleration when available'})
-    num_procs: int = field(default=1, metadata={'help': 'number of processors to use'})
+    workers: int = field(default=1, metadata={'help': 'number of workers to use'})
     _device: str = None
 
     config: Optional[str] = field(default=None, metadata={'help': 'load arguments from config file/folder'})
@@ -36,6 +36,7 @@ class WandBArguments:
                                     metadata={'help': 'wandb run job type name (e.g. train, eval, data processing)'})
     run_name: Optional[str] = field(default=None, metadata={'help': 'wandb run name'})
     workspace: str = field(default=None, metadata={'help': 'wandb workspace name'})
+    tags: Sequence[str] = field(default_factory=lambda: [].copy(), metadata={'help': 'wandb tags'})
     resume: str = field(default=None, metadata={'help': 'run id to resume'})
 
     _run: Any = field(default=None)
