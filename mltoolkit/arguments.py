@@ -36,7 +36,7 @@ class WandBArguments:
                                     metadata={'help': 'wandb run job type name (e.g. train, eval, data processing)'})
     run_name: Optional[str] = field(default=None, metadata={'help': 'wandb run name'})
     workspace: str = field(default=None, metadata={'help': 'wandb workspace name'})
-    tags: Sequence[str] = field(default_factory=lambda: [].copy(), metadata={'help': 'wandb tags'})
+    tags: Sequence[str] = field(default=None, metadata={'help': 'wandb tags'})
     resume: str = field(default=None, metadata={'help': 'run id to resume'})
 
     _run: Any = field(default=None)
