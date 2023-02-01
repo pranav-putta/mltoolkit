@@ -4,6 +4,7 @@ from typing import Optional, Any, Sequence
 
 from mltoolkit.argparser import argclass
 import torch
+import similaritymeasures
 
 
 @argclass
