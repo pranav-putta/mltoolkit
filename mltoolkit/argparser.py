@@ -8,7 +8,7 @@ import sys
 import typing
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, ArgumentTypeError
 from copy import copy
-from dataclasses import asdict
+import dataclasses
 from enum import Enum
 from inspect import isclass
 from pathlib import Path
@@ -76,6 +76,24 @@ def _string_to_bool(v):
         raise ArgumentTypeError(
             f"Truthy value expected: got {v} but expected one of yes/no, true/false, t/f, y/n, 1/0 (case insensitive)."
         )
+
+
+def asdict(c):
+    if not _is_argclass(c):
+        return c
+    d = {}
+    for name, field_type in c.__annotations__.items():
+        val = getattr(c, name, None)
+        # special cases for when field is argclass, list, dict, val
+        if _is_argclass(field_type):
+            d[name] = asdict(val)
+        elif type(val) is list:
+            d[name] = [asdict(item) for item in val]
+        elif type(val) is dict:
+            d[name] = {k: asdict(v) for k, v in val.items()}
+        else:
+            d[name] = val
+    return d
 
 
 def argclass(*args, **kwargs):
@@ -289,7 +307,7 @@ class NestedArgumentParser(ArgumentParser):
             pprint("Didn't recognize the following arguments:")
             pprint(remaining_args)
             # exit(1)
-        default_args = asdict(self.dataclass_type())
+        default_args = dataclasses.asdict(self.dataclass_type())
         _flatten_args(default_args)
         inputs = {k: v for k, v in vars(namespace).items()}
         entered_args = [arg.replace('--', '').split('=')[0] for arg in sys.argv]
@@ -385,5 +403,5 @@ def parse_args(arg_class, required_args=None, print_args=True, resolve_config=Tr
 
     if ('no_print_args' in arg_dict and arg_dict['no_print_args']) or print_args:
         pprint("=" * 20 + " Training Arguments " + "=" * 20)
-        pprint(asdict(args))
+        pprint(dataclasses.asdict(args))
     return args

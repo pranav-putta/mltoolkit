@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Dict, List
 
-from mltoolkit import argclass, parse_args, GeneralArguments
+from mltoolkit import argclass, parse_args, GeneralArguments, asdict
 
 
 @argclass
@@ -14,11 +14,12 @@ class A:
 class B(GeneralArguments):
     dict_of_As: Dict[str, A] = field(default_factory=dict)
     list_of_As: List[A] = field(default_factory=list)
+    one_a: A = None
 
 
 def main():
     args = parse_args(B)
-    print()
+    print(asdict(args))
 
 
 main()
