@@ -3,7 +3,6 @@ from dataclasses import field
 from typing import Optional, Any, Sequence
 
 from mltoolkit.argparser import argclass
-import similaritymeasures
 
 
 @argclass
