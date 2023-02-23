@@ -3,7 +3,6 @@ from dataclasses import field
 from typing import Optional, Any, Sequence
 
 from mltoolkit.argparser import argclass
-import torch
 import similaritymeasures
 
 
@@ -17,6 +16,10 @@ class GeneralArguments:
 
     def __post_init__(self):
         # check for devices in order ['cuda', 'mps', 'cpu']
+        try:
+            import torch
+        except:
+            raise ModuleNotFoundError('torch needs to be installed for device checking')
         if torch.cuda.is_available() and not self.no_gpu:
             self._device = 'cuda'
         elif 'mps' in dir(torch.backends) and torch.backends.mps.is_available() and not self.no_gpu:
