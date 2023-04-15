@@ -19,7 +19,7 @@ def log_dataset_reference(dataset_args: DataUseArguments, wandb_args: WandBArgum
     if not path.startswith('file://'):
         path = f'file://{path}'
     artifact.add_reference(path, max_objects=max_objects, checksum=checksum)
-    artifact.wait()
+    wandb_args.run.log_artifact(artifact, aliases=[dataset_args.version])
     return artifact
 
 
