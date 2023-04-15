@@ -60,6 +60,7 @@ class DataUseArguments:
     """
     name: str = field(default=None, metadata={'help': 'data name to use'})
     version: str = field(default=None, metadata={'help': 'data version to use'})
+    split: str = field(default=None, metadata={'help': 'split to use'})
     root: str = field(default=None, metadata={'help': 'root folder to use (if operating on local files)'})
 
     @property
