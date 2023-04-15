@@ -12,13 +12,13 @@ def download_dataset(dataset_args: DataUseArguments, wandb_args: WandBArguments)
     return dataset_artifact_dir
 
 
-def log_dataset_reference(dataset_args: DataUseArguments, wandb_args: WandBArguments, max_objects=10000):
+def log_dataset_reference(dataset_args: DataUseArguments, wandb_args: WandBArguments, max_objects=10000, checksum=True):
     init_wandb(wandb_args)
     artifact = wandb.Artifact(dataset_args.name, type='dataset')
     path = dataset_args.file_uri
     if not path.startswith('file://'):
         path = f'file://{path}'
-    artifact.add_reference(path, max_objects=max_objects)
+    artifact.add_reference(path, max_objects=max_objects, checksum=checksum)
     artifact.wait()
     return artifact
 
