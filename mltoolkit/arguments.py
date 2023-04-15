@@ -64,5 +64,9 @@ class DataUseArguments:
     root: str = field(default=None, metadata={'help': 'root folder to use (if operating on local files)'})
 
     @property
-    def artifact_path(self):
+    def wandb_artifact_path(self):
         return f'{self.name}:{self.version}'
+
+    @property
+    def file_uri(self):
+        return os.path.join(self.root, self.name, self.version, self.split)

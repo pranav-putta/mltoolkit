@@ -1,5 +1,7 @@
 import os
 
+import wandb
+
 from mltoolkit.arguments import DataUseArguments, WandBArguments
 
 
@@ -8,6 +10,17 @@ def download_dataset(dataset_args: DataUseArguments, wandb_args: WandBArguments)
                                            type='dataset')
     dataset_artifact_dir = artifact.download()
     return dataset_artifact_dir
+
+
+def log_dataset_reference(dataset_args: DataUseArguments, wandb_args: WandBArguments):
+    init_wandb(wandb_args)
+    artifact = wandb.Artifact(dataset_args.name, type='dataset')
+    path = dataset_args.file_uri
+    if not path.startswith('file://'):
+        path = f'file://{path}'
+    artifact.add_reference(path)
+    artifact.wait()
+    return artifact
 
 
 def init_wandb(wandb_args: WandBArguments):
