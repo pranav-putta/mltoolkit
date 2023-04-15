@@ -32,3 +32,15 @@ def init_wandb(wandb_args: WandBArguments):
                tags=wandb_args.tags,
                resume=wandb_args.resume)
     wandb_args._run = wandb.run
+
+
+def fix_seeds(seed):
+    import random
+    import numpy as np
+    import torch
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
