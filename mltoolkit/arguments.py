@@ -10,6 +10,7 @@ class GeneralArguments:
     no_gpu: bool = field(default=False, metadata={'help': 'do not use GPU acceleration when available'})
     workers: int = field(default=1, metadata={'help': 'number of workers to use'})
     _device: str = None
+    seed: int = None
 
     config: Optional[str] = field(default=None, metadata={'help': 'load arguments from config file/folder'})
 
