@@ -22,14 +22,8 @@ DataClass = NewType("DataClass", Any)
 DataClassType = NewType("DataClassType", Any)
 
 
-@dataclasses.dataclass
-class _BaseArgumentDataClass:
-    def __post_init__(self):
-        pass
-
-
 def _is_argclass(obj):
-    return issubclass(obj, _BaseArgumentDataClass) if isinstance(obj, type) else _is_argclass(type(obj))
+    return hasattr(obj, '_ARGCLASS')
 
 
 def _flatten_args(json):
@@ -103,12 +97,8 @@ def argclass(*args, **kwargs):
     """
 
     def decorator(cls):
-        should_add_arg_base = False
-        for base in cls.__bases__:
-            if issubclass(base, _BaseArgumentDataClass):
-                should_add_arg_base = False
-        if should_add_arg_base:
-            cls = type(cls.__name__, (_BaseArgumentDataClass, *cls.__bases__), cls.__dict__.copy())
+        if not hasattr(cls, '_ARGCLASS'):
+            cls._ARGCLASS = True
         # update argument annotations if there are any
         for name, field_type in cls.__annotations__.items():
             if _is_argclass(field_type) and getattr(cls, name, None) is None:
@@ -117,7 +107,6 @@ def argclass(*args, **kwargs):
         # decode dictionaries into argument classes through post init
         original_post_init = getattr(cls, '__post_init__', None)
 
-        @functools.wraps(cls)
         def __post_init__(self):
             for name, field_type in cls.__annotations__.items():
                 field_value = getattr(self, name, None)

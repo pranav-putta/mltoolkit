@@ -1,13 +1,29 @@
-dict_of_As:
-  a1:
-    one: 1
-    two: 2
-  a2:
-    one: 11
-    two: 22
+seed: 1532
+log_every: 50
+trainer_name: "ppo"
+net_name: "impala"
 
-list_of_As:
-  - one: 1
-    two: 2
-  - one: 1
-    two: 2
+env:
+  max_steps: 50
+  num_objects: 1
+  agent_visibility: -1
+  grid_size: 7
+  reward_type: 'distance_to_goal'
+  difficulty: 'hard'
+
+#  static_env: True
+
+train:
+  scale: 0.5
+  num_steps: 100000
+  value_coef: 0.5
+  entropy_coef: 0.04
+  epsilon: 0.20
+  max_steps: 50
+  num_envs: 4
+  hidden_size: 32
+  embd_dim: 32
+  lr: 0.0005
+  ppo_epochs: 3
+  gru_layers: 4
+  gamma: 0.99
