@@ -19,6 +19,8 @@ class B(GeneralArguments):
 
 def main():
     args = parse_args(B)
+    import pickle
+    pickle.loads(pickle.dumps(args))
     print(asdict(args))
 
 
